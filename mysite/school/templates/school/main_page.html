@@ -1,0 +1,7 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <p>This is the main page</p>
+    <li><a href="{% url 'school:teacher_general' %}"> To Teacher Page</a></li>
+    <li><a href="{% url 'school:student_general' %}"> To Student Page</a></li>
+{% endblock %}

@@ -1,0 +1,7 @@
+<p>This is the student generic page</p>
+
+<ul>
+    {% for student in student_list %}
+        <li><a href="{% url 'school:student_detail' student.id %}">{{ student.student_name }}</a></li>
+    {% endfor %}
+</ul>
