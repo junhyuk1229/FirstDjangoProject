@@ -1,4 +1,8 @@
-<p>This is the student detail page</p>
-<p>Name: {{ student.student_name }}</p>
-<p>Registered: {{ student.register_date }}</p>
-<p>Advisor: <a href="{% url 'school:teacher_detail' student.advisor_teacher.id %}">{{ student.advisor_teacher.teacher_name }}</a></p>
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <p>This is the student detail page</p>
+    <p>Name: {{ student.student_name }}</p>
+    <p>Registered: {{ student.register_date }}</p>
+    <p>Advisor: <a href="{% url 'school:teacher_detail' student.advisor_teacher.id %}">{{ student.advisor_teacher.teacher_name }}</a></p>
+{% endblock %}

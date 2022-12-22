@@ -16,10 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.views.generic import RedirectView
 from django.urls import include, path
+from users import views as user_views
 
 urlpatterns = [
+    path('register/', user_views.register, name='register'),
     path('polls/', include('polls.urls')),
-    path('school/', include('school.urls')),
+    path('school/', include('school.urls'), name='school_main'),
     path('admin/', admin.site.urls),
     path('', RedirectView.as_view(url='school/', permanent=True)),
 ]

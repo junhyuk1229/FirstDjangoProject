@@ -1,9 +1,15 @@
-<p>This is the teacher detail page</p>
-<p>Name: {{ teacher.teacher_name }}</p>
-<p>Registered: {{ teacher.register_date }}</p>
+{% extends "base_generic.html" %}
 
-<ul>
-    {% for teacher in teacher_list %}
-        <li><a href="{% url 'school:teacher_detail' teacher.id %}">{{ teacher.teacher_name }}</a></li>
-    {% endfor %}
-</ul>
+{% block content %}
+    <p>This is the teacher detail page</p>
+    <p>Name: {{ teacher.teacher_name }}</p>
+    <p>Registered: {{ teacher.register_date }}</p>
+
+    <ul>
+        {% for teacher in teacher_list %}
+            <li><a href="{% url 'school:teacher_detail' teacher.id %}">{{ teacher.teacher_name }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}
+
+
