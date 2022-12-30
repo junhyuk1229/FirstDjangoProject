@@ -9,7 +9,7 @@
               <a class="mr-2" href="#">{{ anno.auther_name }}</a>
               <small class="text-muted">{{ anno.anno_date|date:"F d, Y" }}</small>
             </div>
-            <h2><a class="article-title" href="#">{{ anno.anno_title }}</a></h2>
+            <h2><a class="article-title" href="{% url 'school:anno_detail' anno.id %}">{{ anno.anno_title }}</a></h2>
             <p class="article-content">{{ anno.anno_content }}</p>
           </div>
         </article>

@@ -5,7 +5,7 @@
 
     <ul>
         {% for teacher in teacher_list %}
-            <li><a href="{% url 'school:teacher_detail' teacher.id %}">{{ teacher.teacher_name }}</a></li>
+            <li><a href="{% url 'school:teacher_detail' teacher.id %}">{{ teacher.teacher_user.username }}</a></li>
         {% endfor %}
     </ul>
 {% endblock %}
