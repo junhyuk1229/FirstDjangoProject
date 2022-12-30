@@ -1,10 +1,14 @@
 from django.shortcuts import render, HttpResponse
 from django.views import generic
-from .models import Teacher, Student
+from .models import Teacher, Student, Announcement
 
 
 def main_page(request):
-    return render(request, "school/main_page.html")
+    context = {
+        'announcements': Announcement.objects.all()
+    }
+
+    return render(request, "school/main_page.html", context)
 
 
 class TeacherGeneralView(generic.ListView):

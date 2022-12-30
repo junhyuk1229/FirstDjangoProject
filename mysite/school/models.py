@@ -1,6 +1,6 @@
-import datetime
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import User
 
 
 class Teacher(models.Model):
@@ -20,3 +20,11 @@ class Student(models.Model):
         return f"Name: {self.student_name}\nRegistered date: {self.register_date}\nAdvisor: {self.advisor_teacher.teacher_name}"
 
 
+class Announcement(models.Model):
+    anno_title = models.CharField(max_length=100)
+    anno_content = models.TextField()
+    anno_date = models.DateTimeField(default=timezone.now)
+    auther_name = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+
+    def __str__(self):
+        return f"Title: {self.anno_title}"
