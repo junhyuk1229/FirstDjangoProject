@@ -2,5 +2,8 @@
 
 {% block content %}
     <p>This is the teacher detail page</p>
-    <p>Username: {{ teacher.teacher_user.username }}</p>
+    <p>Username: {{ teacher.teacher_user.site_user.username }}</p>
+    <p>First Name: {{ teacher.teacher_user.site_user.first_name }}</p>
+    <p>Last Name: {{ teacher.teacher_user.site_user.last_name }}</p>
+    <p>Username: {{ teacher.teacher_user.site_user.username }}</p>
 {% endblock %}

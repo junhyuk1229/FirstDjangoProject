@@ -16,4 +16,5 @@ urlpatterns = [
     path('anno/<int:pk>/update', views.AnnoUpdateView.as_view(), name='anno_update'),
     path('anno/<int:pk>/delete', views.AnnoDeleteView.as_view(), name='anno_delete'),
     path('test', views.TestDetailView.as_view(), name='test_detail'),
+    path('anno/generial', views.AnnoGeneralView.as_view(), name='anno_general')
 ]

@@ -1,17 +1,2 @@
 {% extends "base_generic.html" %}
 
-{% block content %}
-    {% for anno in announcements %}
-        <article class="media content-section">
-            <img class="rounded-circle aritcle-img" src="{{ anno.auther_name.profile.image.url }}" width="100" height="100">
-            <div class="media-body">
-            <div class="article-metadata">
-              <a class="mr-2" href="#">{{ anno.auther_name }}</a>
-              <small class="text-muted">{{ anno.anno_date|date:"F d, Y" }}</small>
-            </div>
-            <h2><a class="article-title" href="{% url 'school:anno_detail' anno.id %}">{{ anno.anno_title }}</a></h2>
-            <p class="article-content">{{ anno.anno_content }}</p>
-          </div>
-        </article>
-    {% endfor %}
-{% endblock %}

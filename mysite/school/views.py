@@ -65,6 +65,24 @@ class AnnoDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView
         return False
 
 
+class AnnoGeneralView(generic.ListView):
+    template_name = 'school/anno_generic.html'
+    context_object_name = 'anno_list'
+
+    def get_queryset(self):
+        return Announcement.objects.all()
+
+    def get_context_data(self, **kwargs):
+        context = super(AnnoGeneralView, self).get_context_data(**kwargs)
+
+        is_teacher = False
+        if self.request.user in list(map(lambda x: x.teacher_user.site_user, Teacher.objects.all())):
+            is_teacher = True
+
+        context['is_teacher'] = is_teacher
+        return context
+
+
 class TeacherGeneralView(generic.ListView):
     template_name = 'school/teacher_generic.html'
     context_object_name = 'teacher_list'
