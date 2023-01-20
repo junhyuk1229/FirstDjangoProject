@@ -19,6 +19,9 @@ class Student(models.Model):
         return f"Username: {self.student_user.username}"
 
 
+
+
+
 class Announcement(models.Model):
     anno_title = models.CharField(max_length=100)
     anno_content = models.TextField()
