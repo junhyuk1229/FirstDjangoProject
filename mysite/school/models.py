@@ -8,6 +8,7 @@ class SchoolUser(models.Model):
     class TypeTeacherStudent(models.TextChoices):
         STUDENT = 'S', ("Student")
         TEACHER = 'T', ("Teacher")
+        ADMIN = 'A', ("Admin")
 
     site_user = models.OneToOneField(
         User,

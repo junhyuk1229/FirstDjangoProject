@@ -23,10 +23,10 @@ from django.urls import include, path
 from users import views as user_views
 
 urlpatterns = [
-    path('register/', user_views.register, name='register'),
-    path('profile/', user_views.profile, name='profile'),
-    path('login/', auth_views.LoginView.as_view(template_name='users/login.html'), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(template_name='users/logout.html'), name='logout'),
+    path('register/', user_views.register, name='user_register'),
+    path('profile/', user_views.profile, name='user_profile'),
+    path('login/', auth_views.LoginView.as_view(template_name='users/user_login.html'), name='user_login'),
+    path('logout/', auth_views.LogoutView.as_view(template_name='users/user_logout.html'), name='user_logout'),
     path('polls/', include('polls.urls')),
     path('school/', include('school.urls')),
     path('admin/', admin.site.urls),

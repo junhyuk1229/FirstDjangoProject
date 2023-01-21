@@ -11,6 +11,7 @@ def main_page(request):
 
     return render(request, "school/main_page.html", context)
 
+# region Announcement
 
 class AnnoListView(generic.ListView):
     template_name = 'school/main_page.html'
@@ -75,13 +76,15 @@ class AnnoGeneralView(generic.ListView):
     def get_context_data(self, **kwargs):
         context = super(AnnoGeneralView, self).get_context_data(**kwargs)
 
-        is_teacher = False
+        is_teacher_admin = False
         if self.request.user in list(map(lambda x: x.teacher_user.site_user, Teacher.objects.all())):
-            is_teacher = True
-
-        context['is_teacher'] = is_teacher
+            is_teacher_admin = True
+        context['is_teacher'] = is_teacher_admin
         return context
 
+# endregion
+
+# region Teacher
 
 class TeacherGeneralView(generic.ListView):
     template_name = 'school/teacher_generic.html'
@@ -91,6 +94,14 @@ class TeacherGeneralView(generic.ListView):
         return Teacher.objects.all()
 
 
+class TeacherDetailView(generic.DetailView):
+    model = Teacher
+    template_name = 'school/teacher_detail.html'
+
+# endregion
+
+# region Student
+
 class StudentGeneralView(generic.ListView):
     template_name = 'school/student_generic.html'
     context_object_name = 'student_list'
@@ -99,15 +110,11 @@ class StudentGeneralView(generic.ListView):
         return Student.objects.all()
 
 
-class TeacherDetailView(generic.DetailView):
-    model = Teacher
-    template_name = 'school/teacher_detail.html'
-
-
 class StudentDetailView(generic.DetailView):
     model = Student
     template_name = 'school/student_detail.html'
 
+# endregion
 
 class TestDetailView(generic.DetailView):
     model = Teacher
