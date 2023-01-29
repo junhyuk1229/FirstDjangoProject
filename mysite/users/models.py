@@ -1,9 +1,23 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 from PIL import Image
 
 
+class User(AbstractUser):
+    def __str__(self):
+        return f"{self.username}"
+    
+    def save(self, *args, **kwargs):
+        created = self.pk is None
+        super(User, self).save(*args, **kwargs)
+        if created:
+            Profile.objects.create_profile(self)
 
+
+class ProfileManager(models.Manager):
+    def create_profile(self, user):
+        profile = self.create(user=user)
+        return profile
 
 
 class Profile(models.Model):
@@ -16,6 +30,8 @@ class Profile(models.Model):
         default='default.jpg',
         upload_to='profile_pics',
     )
+
+    objects = ProfileManager()
 
     def __str__(self):
         return f'{self.user.username} Profile'
