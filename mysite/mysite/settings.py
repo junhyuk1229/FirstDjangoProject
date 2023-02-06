@@ -34,7 +34,6 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'users.apps.UsersConfig',
-    'polls.apps.PollsConfig',
     'school.apps.SchoolConfig',
     'crispy_forms',
     'django.contrib.admin',
