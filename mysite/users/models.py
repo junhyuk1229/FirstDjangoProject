@@ -14,6 +14,7 @@ class User(AbstractUser):
             Profile.objects.create_profile(self)
 
 
+
 class ProfileManager(models.Manager):
     def create_profile(self, user):
         profile = self.create(user=user)

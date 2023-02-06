@@ -1,0 +1,17 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    {% if is_admin %}
+        <p>This is the register generic page</p>
+        
+        <ul>
+            {% for register in register_list %}
+                <li><a class="article-title" href="{% url 'school:register_update' register.id %}">{{ register }}</a></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>
+            You are not a admin
+        </p>
+    {% endif %}
+{% endblock %}

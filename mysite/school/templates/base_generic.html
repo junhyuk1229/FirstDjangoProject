@@ -55,7 +55,16 @@
               </div>
             {% endfor %}
           {% endif %}
-          {% block content %}{% endblock %}
+          {% if is_undetermined %}
+            <p>
+              You are currently not registered to this school
+            </p>
+            <p>
+              Call your school to get registered to the website
+            </p>
+          {% else %}
+            {% block content %}{% endblock %}
+          {% endif %}
         </div>
         <div class="col-md-4">
           <div class="content-section">

@@ -2,28 +2,31 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-    {% if is_teacher or is_admin %}
+    {% if is_admin %}
         <div class="content-section">
             <form method="POST">
                 {% csrf_token %}
                 <fieldset class="form-group">
                     <legend class="border-bottom mb-4">
-                        Blog Post
+                        User Update
                     </legend>
+                    <p>First Name: {{ schooluser.site_user.first_name }}</p>
+                    <p>Last Name: {{ schooluser.site_user.last_name }}</p>
+                    <p>Username: {{ schooluser.site_user.username }}</p>
+                    <p>Registerd Date: {{ schooluser.site_user.date_joined }}</p>
+                    <p>E-Mail: {{ schooluser.site_user.email }}</p>
                     {{ form|crispy }}
                 </fieldset>
                 <div class="form-group">
                     <button class="btn btn-outline-info" type="submit">
-                        Post
+                        Update User
                     </button>
                 </div>
             </form>
         </div>
     {% else %}
-        <div class="content-section">
-            <p>
-                Only teachers can make announcements
-            </p>
-        </div>
+        <p>
+            You are not a admin
+        </p>
     {% endif %}
 {% endblock %}

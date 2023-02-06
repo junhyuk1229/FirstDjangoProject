@@ -9,6 +9,7 @@ class SchoolUser(models.Model):
         STUDENT = 'S', ("Student")
         TEACHER = 'T', ("Teacher")
         ADMIN = 'A', ("Admin")
+        UNDETERMINED = 'U', ("Undetermined")
 
     site_user = models.OneToOneField(
         User,
@@ -21,14 +22,16 @@ class SchoolUser(models.Model):
         max_length=1,
         choices=TypeTeacherStudent.choices,
         default=TypeTeacherStudent.STUDENT,
-        help_text="Type of user(Teacher, Student)",
+        help_text="Type of user(Teacher, Student, Admin, Undetermined)",
     )
 
     def __str__(self):
         return f"\n\
             Primary Key: {self.pk}\n\
-            Username: {self.site_user.username}\n\
-            Type: {self.type_user}\n"
+            Username: {self.site_user.username}\n"
+    
+    def get_absolute_url(self):
+        return reverse('school:register_general')
 
 
 class Teacher(models.Model):
@@ -57,14 +60,14 @@ class Student(models.Model):
         Teacher,
         on_delete=models.SET_NULL,
         null=True,
+        blank=True,
         help_text="Teacher that advises the student",
     )
 
     def __str__(self):
         return f"\n\
             Primery Key: {self.pk}\n\
-            Username: {self.student_user.site_user.username}\n\
-            Teacher Username: {self.advisor_teacher.teacher_user.site_user.username}\n"
+            Username: {self.student_user.site_user.username}\n"
 
 
 class Announcement(models.Model):
