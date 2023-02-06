@@ -1,10 +1,14 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from PIL import Image
+from datetime import datetime
 
 
 class User(AbstractUser):
     def __str__(self):
+        return f"{self.username}"
+    
+    def __unicode__(self):
         return f"{self.username}"
     
     def save(self, *args, **kwargs):
@@ -12,7 +16,6 @@ class User(AbstractUser):
         super(User, self).save(*args, **kwargs)
         if created:
             Profile.objects.create_profile(self)
-
 
 
 class ProfileManager(models.Manager):
@@ -35,6 +38,9 @@ class Profile(models.Model):
     objects = ProfileManager()
 
     def __str__(self):
+        return f'{self.user.username} Profile'
+
+    def __unicode__(self):
         return f'{self.user.username} Profile'
 
     def save(self, *args, **kwargs):

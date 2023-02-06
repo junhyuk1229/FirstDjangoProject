@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.urls import reverse
 from users.models import User
+from . import validators as val
 
 
 class SchoolUser(models.Model):
@@ -101,3 +102,28 @@ class Announcement(models.Model):
 
     def get_absolute_url(self):
         return reverse('school:anno_detail', kwargs={'pk': self.pk})
+
+
+class Subject(models.Model):
+    subject_name = models.CharField(
+        max_length=100,
+        help_text="Name of subject",
+    )
+
+    def __str__(self):
+        return f"\n\
+            Primary Key: {self.pk}\n\
+            Subject: {self.subject_name}"
+
+
+class SchoolClass(models.Model):
+    class_subject = models.ForeignKey(
+        Subject,
+        on_delete=models.CASCADE,
+        help_text="Subject the class is based on",
+    )
+
+    class_time = models.IntegerField(
+        validators=[val.check_semester_valid],
+        help_text="Year + semester of the subject",
+    )
