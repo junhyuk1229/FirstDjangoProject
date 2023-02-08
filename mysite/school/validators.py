@@ -1,11 +1,14 @@
 from datetime import datetime
-
 from django.core.exceptions import ValidationError
 
 
-def check_semester_valid(value):
+def check_student_schooluser_valid(schooluser):
+    return
+
+
+def check_schoolclass_semester_valid(value):
     now = datetime.now()
-    if value // 10 < 1000 or now.year < value // 10:
+    if value // 10 < 1000 or now.year <= value // 10:
         raise ValidationError(
             ('%(value)s does not contain a valid year'),
             params={'value': value},
@@ -15,3 +18,6 @@ def check_semester_valid(value):
             ('%(value)s does not contain a valid semester'),
             params={'value': value},
         )
+
+def check_semester_valid(value):
+    return

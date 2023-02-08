@@ -18,10 +18,10 @@ urlpatterns = [
     path('anno/create', views.AnnoCreateView.as_view(), name='anno_create'),
     path('anno/<int:pk>/update', views.AnnoUpdateView.as_view(), name='anno_update'),
     path('anno/<int:pk>/delete', views.AnnoDeleteView.as_view(), name='anno_delete'),
-    path('anno/generial', views.AnnoGeneralView.as_view(), name='anno_general'),
-    
+    path('anno', views.AnnoGeneralView.as_view(), name='anno_general'),
+
     path('admin/register', views.AdminRegisterListView.as_view(), name='register_general'),
     path('admin/register/<int:pk>', views.AdminRegisterUpdateView.as_view(), name='register_update'),
-    
+
     path('test/<int:pk>', views.TestClassView.as_view(), name='test_detail'),
 ]

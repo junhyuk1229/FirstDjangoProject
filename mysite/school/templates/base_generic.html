@@ -30,6 +30,9 @@
             <div class="navbar-nav mr-auto">
               <a class="nav-item nav-link" href="{% url 'school:teacher_general' %}">Teacher</a>
               <a class="nav-item nav-link" href="{% url 'school:student_general' %}">Student</a>
+              {% if is_admin %}
+                <a class="nav-item nav-link" href="{% url 'school:register_general' %}">Register</a>
+              {% endif %}
             </div>
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
@@ -55,16 +58,7 @@
               </div>
             {% endfor %}
           {% endif %}
-          {% if is_undetermined %}
-            <p>
-              You are currently not registered to this school
-            </p>
-            <p>
-              Call your school to get registered to the website
-            </p>
-          {% else %}
-            {% block content %}{% endblock %}
-          {% endif %}
+          {% block content %}{% endblock %}
         </div>
         <div class="col-md-4">
           <div class="content-section">

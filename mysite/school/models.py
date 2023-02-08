@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
 from django.urls import reverse
@@ -27,9 +28,7 @@ class SchoolUser(models.Model):
     )
 
     def __str__(self):
-        return f"\n\
-            Primary Key: {self.pk}\n\
-            Username: {self.site_user.username}\n"
+        return f"\nPrimary Key: {self.pk}\nUser Type: {self.type_user}\nUsername: {self.site_user.username}\n"
     
     def get_absolute_url(self):
         return reverse('school:register_general')
@@ -44,9 +43,14 @@ class Teacher(models.Model):
     )
 
     def __str__(self):
-        return f"\n\
-            Primery Key: {self.pk}\n\
-            Username: {self.teacher_user.site_user.username}\n"
+        return f"\nPrimery Key: {self.pk}\nUsername: {self.teacher_user.site_user.username}\n"
+    
+    def clean(self):
+        if self.teacher_user.type_user != 'T':
+            raise ValidationError(
+                ('%(value)s is not a teacher(Value: %(type_user)s)'),
+                params={'value': self.teacher_user.site_user.username, 'type_user': self.teacher_user.type_user},
+            )
 
 
 class Student(models.Model):
@@ -54,6 +58,7 @@ class Student(models.Model):
         SchoolUser,
         on_delete=models.CASCADE,
         null=False,
+        validators=[val.check_student_schooluser_valid],
         help_text="Student user",
     )
 
@@ -66,9 +71,14 @@ class Student(models.Model):
     )
 
     def __str__(self):
-        return f"\n\
-            Primery Key: {self.pk}\n\
-            Username: {self.student_user.site_user.username}\n"
+        return f"\nPrimery Key: {self.pk}\nUsername: {self.student_user.site_user.username}\n"
+    
+    def clean(self):
+        if self.student_user.type_user != 'S':
+            raise ValidationError(
+                ('%(value)s is not a student(Value: %(type_user)s)'),
+                params={'value': self.student_user.site_user.username, 'type_user': self.student_user.type_user},
+            )
 
 
 class Announcement(models.Model):
@@ -87,21 +97,23 @@ class Announcement(models.Model):
     )
 
     auther_name = models.ForeignKey(
-        User,
-        null=True,
-        on_delete=models.SET_NULL,
+        SchoolUser,
+        on_delete=models.CASCADE,
         help_text="Name of auther",
     )
 
     def __str__(self):
-        return f"\n\
-            Primary Key: {self.pk}\n\
-            Title: {self.anno_title}\n\
-            Creation Date: {self.anno_date}\n\
-            Author Username: {self.auther_name.username}\n"
+        return f"\nPrimary Key: {self.pk}\nTitle: {self.anno_title}\nCreation Date: {self.anno_date}\nAuthor Username: {self.auther_name.site_user.username}\n"
 
     def get_absolute_url(self):
         return reverse('school:anno_detail', kwargs={'pk': self.pk})
+    
+    def clean(self):
+        if self.auther_name.type_user not in ['A', 'T']:
+            raise ValidationError(
+                ('%(value)s is not a admin or teacher(Value: %(type_user)s)'),
+                params={'value': self.auther_name.site_user.username, 'type_user': self.auther_name.type_user},
+            )
 
 
 class Subject(models.Model):
@@ -111,9 +123,7 @@ class Subject(models.Model):
     )
 
     def __str__(self):
-        return f"\n\
-            Primary Key: {self.pk}\n\
-            Subject: {self.subject_name}"
+        return f"\nPrimary Key: {self.pk}\nSubject: {self.subject_name}"
 
 
 class SchoolClass(models.Model):
@@ -124,6 +134,32 @@ class SchoolClass(models.Model):
     )
 
     class_time = models.IntegerField(
-        validators=[val.check_semester_valid],
+        validators=[val.check_schoolclass_semester_valid],
         help_text="Year + semester of the subject",
     )
+
+    assigned_teacher = models.ForeignKey(
+        Teacher,
+        on_delete=models.CASCADE,
+        help_text="Teacher teaching class",
+    )
+
+    def __str__(self):
+        return f"\nPrimery Key: {self.pk}\nClass Time: {self.class_time}\nAssigned Teacher: {self.assigned_teacher.teacher_user.site_user.username}\n"
+
+
+class ClassStudentRelation(models.Model):
+    class_relate = models.ForeignKey(
+        SchoolClass,
+        on_delete=models.CASCADE,
+        help_text="Connected class to student",
+    )
+
+    student_relate = models.ForeignKey(
+        Student,
+        on_delete=models.CASCADE,
+        help_text="Connected student to class",
+    )
+
+    def __str__(self):
+        return f"\nPrimery Key: {self.pk}\nClass Subject: {self.class_relate.class_subject}\nClass Time: {self.class_relate.class_time}\nAssigned Teacher: {self.class_relate.assigned_teacher.teacher_user.site_user.username}\nStudent: {self.student_relate.student_user.site_user.username}\n"

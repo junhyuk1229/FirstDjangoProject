@@ -1,7 +1,7 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-    {% if is_teacher or is_admin %}
+    {% if is_admin or is_teacher %}
         <div class="media-body">
             <a class="nav-item nav-link" href="{% url 'school:anno_create' %}">
                 <button class="btn btn-outline-info" type="submit">

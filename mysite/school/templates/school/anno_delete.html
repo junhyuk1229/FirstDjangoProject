@@ -1,33 +1,25 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-    {% if is_teacher or is_admin %}
-        <div class="content-section">
-            <form method="POST">
-                {% csrf_token %}
-                <fieldset class="form-group">
-                    <legend class="border-bottom mb-4">
-                        Delete Post
-                    </legend>
-                    <h2>
-                        Are you sure you want to delete the post {{ object.anno_title }}
-                    </h2>
-                </fieldset>
-                <div class="form-group">
-                    <button class="btn btn-outline-danger" type="submit">
-                        Delete
-                    </button>
-                    <a class="btn btn-outline-secondary" href="{% url 'school:anno_detail' object.id %}">
-                        Cancel
-                    </a>
-                </div>
-            </form>
-        </div>
-    {% else %}
-        <div class="content-section">
-            <p>
-                Only teachers can make announcements
-            </p>
-        </div>
-    {% endif %}
+    <div class="content-section">
+        <form method="POST">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">
+                    Delete Post
+                </legend>
+                <h2>
+                    Are you sure you want to delete the post {{ anno.anno_title }}
+                </h2>
+            </fieldset>
+            <div class="form-group">
+                <button class="btn btn-outline-danger" type="submit">
+                    Delete
+                </button>
+                <a class="btn btn-outline-secondary" href="{% url 'school:anno_detail' anno.id %}">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
 {% endblock %}

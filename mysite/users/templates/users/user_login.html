@@ -3,7 +3,9 @@
 
 {% block content %}
     {% if user.is_authenticated %}
-        <p>Already Logged In</p>
+        <div class="content-section">
+            <p>User Already Logged In</p>
+        </div>
     {% else %}
         <div class="content-section">
             <form method="POST">
