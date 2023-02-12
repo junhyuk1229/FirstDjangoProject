@@ -35,7 +35,7 @@ class SchoolUser(models.Model):
 
 
 class Teacher(models.Model):
-    teacher_user = models.ForeignKey(
+    teacher_user = models.OneToOneField(
         SchoolUser,
         on_delete=models.CASCADE,
         null=False,
@@ -54,11 +54,10 @@ class Teacher(models.Model):
 
 
 class Student(models.Model):
-    student_user = models.ForeignKey(
+    student_user = models.OneToOneField(
         SchoolUser,
         on_delete=models.CASCADE,
         null=False,
-        validators=[val.check_student_schooluser_valid],
         help_text="Student user",
     )
 

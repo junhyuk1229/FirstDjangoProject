@@ -12,10 +12,10 @@
     {% endif %}
     {% for anno in anno_list %}
         <article class="media content-section">
-            <img class="rounded-circle aritcle-img" src="{{ anno.auther_name.profile.image.url }}" width="100" height="100">
+            <img class="rounded-circle aritcle-img" src="{{ anno.auther_name.site_user.profile.image.url }}" width="100" height="100">
             <div class="media-body">
             <div class="article-metadata">
-              <a class="ml-2 mr-2" href="#">{{ anno.auther_name }}</a>
+              <a class="ml-2 mr-2" href="#">{{ anno.auther_name.site_user }}</a>
               <small class="text-muted">{{ anno.anno_date|date:"F d, Y" }}</small>
             </div>
             <h2><a class="ml-2 article-title" href="{% url 'school:anno_detail' anno.id %}">{{ anno.anno_title }}</a></h2>

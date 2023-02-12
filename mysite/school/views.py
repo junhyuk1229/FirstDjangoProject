@@ -79,12 +79,12 @@ class AnnoUpdateView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView
     login_url = '/login/'
 
     def form_valid(self, form):
-        form.instance.auther_name = self.request.user
+        form.instance.auther_name.site_user = self.request.user
         return super().form_valid(form)
 
     def test_func(self):
         anno = self.get_object()
-        if self.request.user == anno.auther_name or SchoolUser.objects.get(site_user=self.request.user).type_user == 'A':
+        if self.request.user == anno.auther_name.site_user or SchoolUser.objects.get(site_user=self.request.user).type_user == 'A':
             return True
         return False
     
@@ -104,7 +104,7 @@ class AnnoDeleteView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView
 
     def test_func(self):
         anno = self.get_object()
-        if self.request.user == anno.auther_name or SchoolUser.objects.get(site_user=self.request.user).type_user == 'A':
+        if self.request.user == anno.auther_name.site_user or SchoolUser.objects.get(site_user=self.request.user).type_user == 'A':
             return True
         return False
     

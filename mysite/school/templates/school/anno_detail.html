@@ -2,13 +2,13 @@
 
 {% block content %}
     <article class="media content-section">
-        <img class="rounded-circle aritcle-img" src="{{ anno.auther_name.profile.image.url }}" width="100" height="100">
+        <img class="rounded-circle aritcle-img" src="{{ anno.auther_name.site_user.profile.image.url }}" width="100" height="100">
         <div class="media-body">
             <h2 class="ml-2 article-title">{{ anno.anno_title }}</h2>
             <div class="article-metadata">
-                <a class="ml-2 mr-2" href="#">{{ anno.auther_name }}</a>
+                <a class="ml-2 mr-2" href="#">{{ anno.auther_name.site_user }}</a>
                 <small class="text-muted">{{ anno.anno_date|date:"F d, Y" }}</small>
-                {% if anno.auther_name == user or is_admin %}
+                {% if anno.auther_name.site_user == user or is_admin %}
                     <div>
                         <a class="ml-2 btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'school:anno_update' object.id %}">Update</a>
                         <a class="ml-2 btn btn-danger btn-sm mt-1 mb-1" href="{% url 'school:anno_delete' object.id %}">Delete</a>

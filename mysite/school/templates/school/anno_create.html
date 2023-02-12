@@ -2,7 +2,7 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-    {% if not is_teacher or is_admin %}
+    {% if is_teacher or is_admin %}
         <div class="content-section">
             <form method="POST">
                 {% csrf_token %}
