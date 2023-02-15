@@ -102,17 +102,10 @@ class Announcement(models.Model):
     )
 
     def __str__(self):
-        return f"\nPrimary Key: {self.pk}\nTitle: {self.anno_title}\nCreation Date: {self.anno_date}\nAuthor Username: {self.auther_name.site_user.username}\n"
+        return f"\nPrimary Key: {self.pk}\nTitle: {self.anno_title}\nCreation Date: {self.anno_date}\n"
 
     def get_absolute_url(self):
         return reverse('school:anno_detail', kwargs={'pk': self.pk})
-    
-    def clean(self):
-        if self.auther_name.type_user not in ['A', 'T']:
-            raise ValidationError(
-                ('%(value)s is not a admin or teacher(Value: %(type_user)s)'),
-                params={'value': self.auther_name.site_user.username, 'type_user': self.auther_name.type_user},
-            )
 
 
 class Subject(models.Model):

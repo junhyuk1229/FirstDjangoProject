@@ -3,12 +3,13 @@ from django.test import TestCase, Client
 from users.models import User, Profile
 from django.urls import reverse
 
+#region models
 
 class CheckUsersModelUser(TestCase):
     @classmethod
     def setUp(self):
-        temp_user = User.objects.create(username='Jun')
-        temp_user.set_password('test123')
+        temp_user = User.objects.create(username='TestUser')
+        temp_user.set_password('tuse')
         temp_user.save()
 
     def test_user_created_check(self):
@@ -23,18 +24,18 @@ class CheckUsersModelUser(TestCase):
 
     def test_user_login_correct_info(self):
         temp_client = Client()
-        self.assertEqual(True, temp_client.login(username='Jun', password='test123'))
+        self.assertEqual(True, temp_client.login(username='TestUser', password='tuse'))
 
     def test_user_login_case_sensitive_check(self):
         temp_client = Client()
-        self.assertEqual(False, temp_client.login(username='jun', password='test123'))
-        self.assertEqual(False, temp_client.login(username='Jun', password='Test123'))
+        self.assertEqual(False, temp_client.login(username='Testuser', password='tuse'))
+        self.assertEqual(False, temp_client.login(username='TestUser', password='use'))
 
 
 class CheckUsersModelProfile(TestCase):
     @classmethod
     def setUp(self):
-        User.objects.create(username='Jun')
+        User.objects.create(username='TestUser')
 
     def test_profile_only_one_created_check(self):
         Profile.objects.get(user=User.objects.get(pk=1))
@@ -52,12 +53,15 @@ class CheckUsersModelProfile(TestCase):
         temp_profile = Profile.objects.get(user=User.objects.get(pk=1))
         self.assertEqual(temp_profile.image.url, '/media/default.jpg')
 
+#endregion
+
+#region views
 
 class CheckUsersViewLoginPage(TestCase):
     @classmethod
     def setUp(self):
-        temp_user = User.objects.create(username='Jun')
-        temp_user.set_password('Kim')
+        temp_user = User.objects.create(username='TestUser')
+        temp_user.set_password('tuse')
         temp_user.save()
     
     def test_users_login_page_status_check_before_login(self):
@@ -67,7 +71,7 @@ class CheckUsersViewLoginPage(TestCase):
 
     def test_users_login_page_status_check_after_login(self):
         temp_client = Client()
-        temp_resp = temp_client.post("/login/", data={"username": "Jun", "password": "Kim"})
+        temp_resp = temp_client.post("/login/", data={"username": "TestUser", "password": "tuse"})
         self.assertEqual(temp_resp.status_code, 302)
 
     def test_users_login_page_status_check_reverse(self):
@@ -77,12 +81,12 @@ class CheckUsersViewLoginPage(TestCase):
 
     def test_users_login_page_redirect_check(self):
         temp_client = Client()
-        temp_resp = temp_client.post("/login/", data={"username": "Jun", "password": "Kim"})
+        temp_resp = temp_client.post("/login/", data={"username": "TestUser", "password": "tuse"})
         self.assertEqual(temp_resp.url, "/school/")
 
     def test_users_login_page_wrong_login_check(self):
         temp_client = Client()
-        temp_resp = temp_client.post("/login/", data={"username": "jun", "password": "Kim"})
+        temp_resp = temp_client.post("/login/", data={"username": "TestUser", "password": "use"})
         self.assertContains(temp_resp, "Please enter a correct username and password. Note that both fields may be case-sensitive.", html=True)
 
 
@@ -112,7 +116,7 @@ class CheckUsersViewRegisterPage(TestCase):
     def test_users_register_page_redirect(self):
         temp_client = Client()
         temp_resp = temp_client.post("/register/", data={
-            "username": "junkim",
+            "username": "TestUser",
             "password1": "testpass123",
             "password2": "testpass123",
             "email": "test@gmail.com",
@@ -124,7 +128,7 @@ class CheckUsersViewRegisterPage(TestCase):
     def test_users_register_page_register_check(self):
         temp_client = Client()
         temp_resp = temp_client.post("/register/", data={
-            "username": "junkim",
+            "username": "TestUser",
             "password1": "testpass123",
             "password2": "testpass123",
             "email": "test@gmail.com",
@@ -136,7 +140,7 @@ class CheckUsersViewRegisterPage(TestCase):
     def test_users_register_page_register_correct_info(self):
         temp_client = Client()
         temp_resp = temp_client.post("/register/", data={
-            "username": "junkim",
+            "username": "TestUser",
             "password1": "testpass123",
             "password2": "testpass123",
             "email": "test@gmail.com",
@@ -148,7 +152,7 @@ class CheckUsersViewRegisterPage(TestCase):
     def test_users_register_page_register_wrong_email(self):
         temp_client = Client()
         temp_resp = temp_client.post("/register/", data={
-            "username": "junkim",
+            "username": "TestUser",
             "password1": "testpass123",
             "password2": "testpass123",
             "email": "test@gmail",
@@ -161,7 +165,7 @@ class CheckUsersViewRegisterPage(TestCase):
     def test_users_register_page_register_different_password(self):
         temp_client = Client()
         temp_resp = temp_client.post("/register/", data={
-            "username": "junkim",
+            "username": "TestUser",
             "password1": "testpass123",
             "password2": "testpass13",
             "email": "test@gmail.com",
@@ -172,10 +176,10 @@ class CheckUsersViewRegisterPage(TestCase):
         self.assertContains(temp_resp, "The two password fields didn’t match.", html=True)
 
     def test_users_register_page_register_same_username(self):
-        User.objects.create(username='junkim')
+        User.objects.create(username='TestUser')
         temp_client = Client()
         temp_resp = temp_client.post("/register/", data={
-            "username": "junkim",
+            "username": "TestUser",
             "password1": "testpass123",
             "password2": "testpass123",
             "email": "test@gmail.com",
@@ -188,7 +192,7 @@ class CheckUsersViewRegisterPage(TestCase):
     def test_users_register_page_register_username_valid_symbol(self):
         temp_client = Client()
         temp_resp = temp_client.post("/register/", data={
-            "username": "jun(*&%^(*&^%*))",
+            "username": "Test(*&%^(*&^%*))",
             "password1": "testpass123",
             "password2": "testpass123",
             "email": "test@gmail.com",
@@ -204,7 +208,7 @@ class CheckUsersViewProfilePage(TestCase):
     def setUp(self):
         temp_client = Client()
         temp_client.post("/register/", data={
-            "username": "junkim",
+            "username": "TestUser",
             "password1": "testpass123",
             "password2": "testpass123",
             "email": "test@gmail.com",
@@ -219,7 +223,7 @@ class CheckUsersViewProfilePage(TestCase):
         
     def test_users_profile_page_status_check_after_login(self):
         temp_client = Client()
-        temp_client.login(username='junkim', password='testpass123')
+        temp_client.login(username='TestUser', password='testpass123')
         temp_resp = temp_client.get("/profile/")
         self.assertEqual(temp_resp.status_code, 200)
 
@@ -235,12 +239,14 @@ class CheckUsersViewProfilePage(TestCase):
 
     def test_users_profile_change_user_data(self):
         temp_client = Client()
-        temp_client.login(username='junkim', password='testpass123')
+        temp_client.login(username='TestUser', password='testpass123')
         temp_recv = temp_client.post('/profile/', data={
-            "username": "Junkim",
+            "username": "TestChangedUser",
             "email": "test123@gmail.com",
         })
         self.assertEqual(temp_recv.status_code, 302)
         self.assertEqual(temp_recv.url, '/profile/')
-        self.assertEqual(User.objects.get(pk=1).username, "Junkim")
+        self.assertEqual(User.objects.get(pk=1).username, "TestChangedUser")
         self.assertEqual(User.objects.get(pk=1).email, "test123@gmail.com")
+
+#endregion

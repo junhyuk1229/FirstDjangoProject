@@ -6,6 +6,7 @@ from users.models import User
 from school.models import SchoolUser, Teacher, Student, Announcement, Subject, SchoolClass, ClassStudentRelation
 from django.urls import reverse
 
+#region models
 
 class CheckSchoolModelSchoolUser(TestCase):
     @classmethod
@@ -102,13 +103,6 @@ class CheckSchoolModelAnnouncement(TestCase):
         with self.assertRaises(IndexError):
             Announcement.objects.all()[1]
 
-    def test_announcement_wrong_type_user_check(self):
-        temp_user = User.objects.create(username='Kim')
-        temp_schooluser = SchoolUser.objects.create(site_user=temp_user, type_user='S')
-        temp_announcement = Announcement.objects.create(anno_title='title', anno_content='content', anno_date=datetime.now(), auther_name=temp_schooluser)
-        with self.assertRaises(ValidationError):
-            temp_announcement.clean()
-
 
 class CheckSchoolModelSubject(TestCase):
     @classmethod
@@ -179,6 +173,9 @@ class CheckSchoolModelClassStudentRelation(TestCase):
         with self.assertRaises(IndexError):
             ClassStudentRelation.objects.all()[1]
 
+#endregion
+
+#region views
 
 class CheckSchoolViewMain(TestCase):
     def test_school_main_page_status_check(self):
@@ -207,8 +204,8 @@ class CheckSchoolViewTeacherGeneral(TestCase):
 class CheckSchoolViewTeacherDetail(TestCase):
     @classmethod
     def setUp(self):
-        temp_user = User.objects.create(username='Jun')
-        temp_user.set_password('test123')
+        temp_user = User.objects.create(username='TestUser')
+        temp_user.set_password('tuse')
         temp_user.save()
         temp_schooluser = SchoolUser.objects.create(site_user=temp_user, type_user='T')
         Teacher.objects.create(teacher_user=temp_schooluser)
@@ -244,8 +241,8 @@ class CheckSchoolViewStudentGeneral(TestCase):
 class CheckSchoolViewStudentDetail(TestCase):
     @classmethod
     def setUp(self):
-        temp_user = User.objects.create(username='Jun')
-        temp_user.set_password('test123')
+        temp_user = User.objects.create(username='TestUser')
+        temp_user.set_password('tuse')
         temp_user.save()
         temp_schooluser = SchoolUser.objects.create(site_user=temp_user, type_user='T')
         Student.objects.create(student_user=temp_schooluser)
@@ -269,25 +266,25 @@ class CheckSchoolViewStudentDetail(TestCase):
 class CheckSchoolViewAnnoGeneral(TestCase):
     @classmethod
     def setUp(self):
-        temp_user = User.objects.create(username='Admin')
-        temp_user.set_password('adm')
+        temp_user = User.objects.create(username='TestAdmin')
+        temp_user.set_password('tadm')
         temp_user.save()
         temp_schooluser = SchoolUser.objects.create(site_user=temp_user, type_user='A')
         
-        Announcement.objects.create(anno_title='title', anno_content='content', anno_date=datetime.now(), auther_name=temp_schooluser)
+        Announcement.objects.create(anno_title='TestTitle', anno_content='TestContent', anno_date=datetime.now(), auther_name=temp_schooluser)
 
-        temp_user = User.objects.create(username='Teacher')
-        temp_user.set_password('tea')
+        temp_user = User.objects.create(username='TestTeacher')
+        temp_user.set_password('ttea')
         temp_user.save()
         SchoolUser.objects.create(site_user=temp_user, type_user='T')
 
-        temp_user = User.objects.create(username='Student')
-        temp_user.set_password('stu')
+        temp_user = User.objects.create(username='TestStudent')
+        temp_user.set_password('tstu')
         temp_user.save()
         SchoolUser.objects.create(site_user=temp_user, type_user='S')
 
-        temp_user = User.objects.create(username='Undetermined')
-        temp_user.set_password('und')
+        temp_user = User.objects.create(username='TestUndetermined')
+        temp_user.set_password('tund')
         temp_user.save()
         SchoolUser.objects.create(site_user=temp_user, type_user='U')
 
@@ -303,12 +300,12 @@ class CheckSchoolViewAnnoGeneral(TestCase):
 
     def test_school_announcement_general_create_anno_button_show(self):
         temp_client = Client()
-        temp_client.login(username='Teacher', password='tea')
+        temp_client.login(username='TestTeacher', password='ttea')
         temp_resp = temp_client.get("/school/anno")
         self.assertContains(temp_resp, 'Create new announcement')
 
         temp_client.logout()
-        temp_client.login(username='Admin', password='adm')
+        temp_client.login(username='TestAdmin', password='tadm')
         temp_resp = temp_client.get("/school/anno")
         self.assertContains(temp_resp, 'Create new announcement')
 
@@ -317,49 +314,49 @@ class CheckSchoolViewAnnoGeneral(TestCase):
         temp_resp = temp_client.get("/school/anno")
         self.assertNotContains(temp_resp, 'Create new announcement')
 
-        temp_client.login(username='Student', password='stu')
+        temp_client.login(username='TestStudent', password='tstu')
         temp_resp = temp_client.get("/school/anno")
         self.assertNotContains(temp_resp, 'Create new announcement')
 
         temp_client.logout()
-        temp_client.login(username='Undetermined', password='und')
+        temp_client.login(username='TestUndetermined', password='tund')
         temp_resp = temp_client.get("/school/anno")
         self.assertNotContains(temp_resp, 'Create new announcement')
 
     def test_school_announcement_general_show_created_announcement(self):
         temp_client = Client()
         temp_resp = temp_client.get("/school/anno")
-        self.assertContains(temp_resp, 'title')
-        self.assertContains(temp_resp, 'content')
+        self.assertContains(temp_resp, 'TestTitle')
+        self.assertContains(temp_resp, 'TestContent')
 
 
 class CheckSchoolViewAnnoDetail(TestCase):
     @classmethod
     def setUp(self):
-        temp_user = User.objects.create(username='Admin')
-        temp_user.set_password('adm')
+        temp_user = User.objects.create(username='TestAdmin')
+        temp_user.set_password('tadm')
         temp_user.save()
         SchoolUser.objects.create(site_user=temp_user, type_user='A')
 
-        temp_user = User.objects.create(username='Teacher')
-        temp_user.set_password('tea')
+        temp_user = User.objects.create(username='TestTeacher')
+        temp_user.set_password('ttea')
         temp_user.save()
         temp_schooluser = SchoolUser.objects.create(site_user=temp_user, type_user='T')
 
-        Announcement.objects.create(anno_title='title', anno_content='content', anno_date=datetime.now(), auther_name=temp_schooluser)
+        Announcement.objects.create(anno_title='TestTitle', anno_content='TestContent', anno_date=datetime.now(), auther_name=temp_schooluser)
 
-        temp_user = User.objects.create(username='OtherTeacher')
-        temp_user.set_password('tea')
+        temp_user = User.objects.create(username='OtherTestTeacher')
+        temp_user.set_password('ottea')
         temp_user.save()
         SchoolUser.objects.create(site_user=temp_user, type_user='T')
 
-        temp_user = User.objects.create(username='Student')
-        temp_user.set_password('stu')
+        temp_user = User.objects.create(username='TestStudent')
+        temp_user.set_password('tstu')
         temp_user.save()
         SchoolUser.objects.create(site_user=temp_user, type_user='S')
 
-        temp_user = User.objects.create(username='Undetermined')
-        temp_user.set_password('und')
+        temp_user = User.objects.create(username='TestUndetermined')
+        temp_user.set_password('tund')
         temp_user.save()
         SchoolUser.objects.create(site_user=temp_user, type_user='U')
 
@@ -380,13 +377,13 @@ class CheckSchoolViewAnnoDetail(TestCase):
 
     def test_school_announcement_detail_update_button_show(self):
         temp_client = Client()
-        temp_client.login(username='Admin', password='adm')
+        temp_client.login(username='TestAdmin', password='tadm')
         temp_resp = temp_client.get("/school/anno/1")
         self.assertContains(temp_resp, 'Update')
         self.assertContains(temp_resp, 'Delete')
 
         temp_client.logout()
-        temp_client.login(username='Teacher', password='tea')
+        temp_client.login(username='TestTeacher', password='ttea')
         temp_resp = temp_client.get("/school/anno/1")
         self.assertContains(temp_resp, 'Update')
         self.assertContains(temp_resp, 'Delete')
@@ -397,74 +394,195 @@ class CheckSchoolViewAnnoDetail(TestCase):
         self.assertNotContains(temp_resp, 'Update')
         self.assertNotContains(temp_resp, 'Delete')
         
-        temp_client.login(username='OtherTeacher', password='tea')
+        temp_client.login(username='OtherTestTeacher', password='ottea')
         temp_resp = temp_client.get("/school/anno/1")
         self.assertNotContains(temp_resp, 'Update')
         self.assertNotContains(temp_resp, 'Delete')
 
         temp_client.logout()
-        temp_client.login(username='Student', password='stu')
+        temp_client.login(username='TestStudent', password='tstu')
         temp_resp = temp_client.get("/school/anno/1")
         self.assertNotContains(temp_resp, 'Update')
         self.assertNotContains(temp_resp, 'Delete')
 
         temp_client.logout()
-        temp_client.login(username='Undetermined', password='und')
+        temp_client.login(username='TestUndetermined', password='tund')
         temp_resp = temp_client.get("/school/anno/1")
         self.assertNotContains(temp_resp, 'Update')
         self.assertNotContains(temp_resp, 'Delete')
 
 
 class CheckSchoolViewAnnoCreate(TestCase):
+    @classmethod
     def setUp(self):
-        temp_user = User.objects.create(username='Admin')
-        temp_user.set_password('adm')
+        temp_user = User.objects.create(username='TestAdmin')
+        temp_user.set_password('tadm')
         temp_user.save()
         SchoolUser.objects.create(site_user=temp_user, type_user='A')
 
-        temp_user = User.objects.create(username='Teacher')
-        temp_user.set_password('tea')
+        temp_user = User.objects.create(username='TestTeacher')
+        temp_user.set_password('ttea')
         temp_user.save()
         SchoolUser.objects.create(site_user=temp_user, type_user='T')
 
-        temp_user = User.objects.create(username='Student')
-        temp_user.set_password('stu')
+        temp_user = User.objects.create(username='TestStudent')
+        temp_user.set_password('tstu')
         temp_user.save()
         SchoolUser.objects.create(site_user=temp_user, type_user='S')
 
-        temp_user = User.objects.create(username='Undetermined')
-        temp_user.set_password('und')
+        temp_user = User.objects.create(username='TestUndetermined')
+        temp_user.set_password('tund')
         temp_user.save()
         SchoolUser.objects.create(site_user=temp_user, type_user='U')
 
-    def test_school_announcement_create_status_check_allowed(self):
+    def test_school_announcement_create_page_status_check(self):
         temp_client = Client()
-        temp_client.login(username='Admin', password='adm')
+        temp_resp = temp_client.get("/school/anno/create")
+        self.assertEqual(temp_resp.status_code, 302)
+
+        temp_client.login(username='TestAdmin', password='tadm')
         temp_resp = temp_client.get("/school/anno/create")
         self.assertEqual(temp_resp.status_code, 200)
         
         temp_client.logout()
-        temp_client.login(username='Teacher', password='tea')
+        temp_client.login(username='TestTeacher', password='ttea')
         temp_resp = temp_client.get("/school/anno/create")
         self.assertEqual(temp_resp.status_code, 200)
 
         temp_client.logout()
-        temp_client.login(username='Student', password='stu')
+        temp_client.login(username='TestStudent', password='tstu')
         temp_resp = temp_client.get("/school/anno/create")
         self.assertEqual(temp_resp.status_code, 200)
 
         temp_client.logout()
-        temp_client.login(username='Undetermined', password='und')
+        temp_client.login(username='TestUndetermined', password='tund')
         temp_resp = temp_client.get("/school/anno/create")
         self.assertEqual(temp_resp.status_code, 200)
 
-        temp_client.logout()
-        temp_client = Client()
-        temp_resp = temp_client.get("/school/anno/create")
-        self.assertEqual(temp_resp.status_code, 302)
-
-    def test_school_announcement_create_status_check_reverse(self):
+    def test_school_announcement_create_page_status_check_reverse(self):
         temp_client = Client()
         temp_resp = temp_client.get(reverse('school:anno_create'))
         self.assertEqual(temp_resp.status_code, 302)
 
+    def test_school_announcement_create_page_redirect_check(self):
+        temp_client = Client()
+        temp_client.login(username='TestTeacher', password='ttea')
+        temp_resp = temp_client.post("/school/anno/create", data={'anno_title': 'TestTitle', 'anno_content': 'TestContent'})
+        self.assertEqual(temp_resp.url, "/school/anno/1")
+
+    def test_school_announcement_create_page_access(self):
+        temp_client = Client()
+        temp_client.login(username='TestAdmin', password='tadm')
+        temp_resp = temp_client.get("/school/anno/create")
+        self.assertNotContains(temp_resp, 'You are not a teacher or admin')
+
+        temp_client.logout()
+        temp_client.login(username='TestTeacher', password='ttea')
+        temp_resp = temp_client.get("/school/anno/create")
+        self.assertNotContains(temp_resp, 'You are not a teacher or admin')
+    
+    def test_school_announcement_create_page_access_block(self):
+        temp_client = Client()
+        temp_client.login(username='TestStudent', password='tstu')
+        temp_resp = temp_client.get("/school/anno/create")
+        self.assertContains(temp_resp, 'You are not a teacher or admin')
+
+        temp_client.logout()
+        temp_client.login(username='TestUndetermined', password='tund')
+        temp_resp = temp_client.get("/school/anno/create")
+        self.assertContains(temp_resp, 'You are not a teacher or admin')
+
+    def test_school_announcement_create_page_database_update_check(self):
+        temp_client = Client()
+        temp_client.login(username='TestAdmin', password='tadm')
+        temp_client.post("/school/anno/create", data={'anno_title': 'TestTitle', 'anno_content': 'TestContent'})
+        Announcement.objects.get(pk=1)
+
+
+class CheckSchoolViewAnnoCreate(TestCase):
+    @classmethod
+    def setUp(self):
+        temp_user = User.objects.create(username='TestAdmin')
+        temp_user.set_password('tadm')
+        temp_user.save()
+        SchoolUser.objects.create(site_user=temp_user, type_user='A')
+
+        temp_user = User.objects.create(username='TestTeacher')
+        temp_user.set_password('ttea')
+        temp_user.save()
+        SchoolUser.objects.create(site_user=temp_user, type_user='T')
+
+        temp_user = User.objects.create(username='TestStudent')
+        temp_user.set_password('tstu')
+        temp_user.save()
+        SchoolUser.objects.create(site_user=temp_user, type_user='S')
+
+        temp_user = User.objects.create(username='TestUndetermined')
+        temp_user.set_password('tund')
+        temp_user.save()
+        SchoolUser.objects.create(site_user=temp_user, type_user='U')
+
+    def test_school_announcement_create_page_status_check(self):
+        temp_client = Client()
+        temp_resp = temp_client.get("/school/anno/create")
+        self.assertEqual(temp_resp.status_code, 302)
+
+        temp_client.login(username='TestAdmin', password='tadm')
+        temp_resp = temp_client.get("/school/anno/create")
+        self.assertEqual(temp_resp.status_code, 200)
+        
+        temp_client.logout()
+        temp_client.login(username='TestTeacher', password='ttea')
+        temp_resp = temp_client.get("/school/anno/create")
+        self.assertEqual(temp_resp.status_code, 200)
+
+        temp_client.logout()
+        temp_client.login(username='TestStudent', password='tstu')
+        temp_resp = temp_client.get("/school/anno/create")
+        self.assertEqual(temp_resp.status_code, 200)
+
+        temp_client.logout()
+        temp_client.login(username='TestUndetermined', password='tund')
+        temp_resp = temp_client.get("/school/anno/create")
+        self.assertEqual(temp_resp.status_code, 200)
+
+    def test_school_announcement_create_page_status_check_reverse(self):
+        temp_client = Client()
+        temp_resp = temp_client.get(reverse('school:anno_create'))
+        self.assertEqual(temp_resp.status_code, 302)
+
+    def test_school_announcement_create_page_redirect_check(self):
+        temp_client = Client()
+        temp_client.login(username='TestTeacher', password='ttea')
+        temp_resp = temp_client.post("/school/anno/create", data={'anno_title': 'TestTitle', 'anno_content': 'TestContent'})
+        self.assertEqual(temp_resp.url, "/school/anno/1")
+
+    def test_school_announcement_create_page_access(self):
+        temp_client = Client()
+        temp_client.login(username='TestAdmin', password='tadm')
+        temp_resp = temp_client.get("/school/anno/create")
+        self.assertNotContains(temp_resp, 'You are not a teacher or admin')
+
+        temp_client.logout()
+        temp_client.login(username='TestTeacher', password='ttea')
+        temp_resp = temp_client.get("/school/anno/create")
+        self.assertNotContains(temp_resp, 'You are not a teacher or admin')
+    
+    def test_school_announcement_create_page_access_block(self):
+        temp_client = Client()
+        temp_client.login(username='TestStudent', password='tstu')
+        temp_resp = temp_client.get("/school/anno/create")
+        self.assertContains(temp_resp, 'You are not a teacher or admin')
+
+        temp_client.logout()
+        temp_client.login(username='TestUndetermined', password='tund')
+        temp_resp = temp_client.get("/school/anno/create")
+        self.assertContains(temp_resp, 'You are not a teacher or admin')
+
+    def test_school_announcement_create_page_database_update_check(self):
+        temp_client = Client()
+        temp_client.login(username='TestAdmin', password='tadm')
+        temp_client.post("/school/anno/create", data={'anno_title': 'TestTitle', 'anno_content': 'TestContent'})
+        Announcement.objects.get(pk=1)
+
+#endregion
