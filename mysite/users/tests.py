@@ -250,3 +250,4 @@ class CheckUsersViewProfilePage(TestCase):
         self.assertEqual(User.objects.get(pk=1).email, "test123@gmail.com")
 
 #endregion
+
