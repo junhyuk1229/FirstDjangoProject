@@ -8,3 +8,4 @@ admin.site.register(models.SchoolUser)
 admin.site.register(models.Subject)
 admin.site.register(models.SchoolClass)
 admin.site.register(models.ClassStudentRelation)
+
