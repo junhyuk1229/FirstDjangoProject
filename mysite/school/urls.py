@@ -25,3 +25,4 @@ urlpatterns = [
 
     path('test/<int:pk>', views.TestClassView.as_view(), name='test_detail'),
 ]
+

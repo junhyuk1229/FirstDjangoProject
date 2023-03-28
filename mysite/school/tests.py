@@ -586,3 +586,4 @@ class CheckSchoolViewAnnoCreate(TestCase):
         Announcement.objects.get(pk=1)
 
 #endregion
+
